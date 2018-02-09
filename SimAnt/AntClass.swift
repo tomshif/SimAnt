@@ -100,10 +100,7 @@ class AntClass:EntityClass
             currentState=AIStates.Wander
         }
         
-        if speed < 0.5
-        {
-            speed=0.5
-        }
+        speed=maxSpeed
         
         
     } // func goTo

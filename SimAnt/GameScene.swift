@@ -29,7 +29,7 @@ class GameScene: SKScene {
         
         for i in 1...maxAnts
         {
-            var tempAnt=AntClass()
+            let tempAnt=AntClass()
             tempAnt.speed=0.5
             myAnt.append(tempAnt)
             addChild(myAnt[i-1].sprite)
