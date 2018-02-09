@@ -14,8 +14,8 @@ class GameScene: SKScene {
 
     var myAnt=[AntClass]()
     let mound=SKShapeNode(circleOfRadius: 12)
-    let maxAnts=50
-    
+    let maxAnts=1
+    let circle=SKShapeNode(circleOfRadius: 20)
     override func didMove(to view: SKView) {
     
         // draw ant mound
@@ -23,6 +23,8 @@ class GameScene: SKScene {
         mound.zPosition=0
         addChild(mound)
         
+        circle.isHidden=true
+        addChild(circle)
         
         
         for i in 1...maxAnts
@@ -33,12 +35,20 @@ class GameScene: SKScene {
             addChild(myAnt[i-1].sprite)
             
         }
-
+        
+        
     } // func didMove
     
     
     func touchDown(atPoint pos : CGPoint) {
-
+        myAnt[0].currentState=AntClass.AIStates.GoTo
+        myAnt[0].goToPoint=pos
+        circle.isHidden=false
+        circle.fillColor=NSColor.yellow
+        circle.position=pos
+        
+        
+        
     }
     
     func touchMoved(toPoint pos : CGPoint) {
@@ -129,6 +139,10 @@ class GameScene: SKScene {
         for i in 0...myAnt.count-1
         {
             myAnt[i].update()
+            if myAnt[0].currentState==AntClass.AIStates.Wander
+            {
+                circle.isHidden=true
+            }
         }
     } // func update
 }

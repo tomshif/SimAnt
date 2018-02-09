@@ -20,6 +20,7 @@ class AntClass:EntityClass
     var lastWanderTurn=NSDate()
     var sprite=SKSpriteNode()
     var born=NSDate()
+    var goToPoint=CGPoint(x: 0, y: 0)
     
     // Constants
     let maxSpeed:CGFloat=1.0
@@ -30,15 +31,27 @@ class AntClass:EntityClass
     struct AIStates {
         static let None         : UInt32 = 0
         static let Wander       : UInt32 = 0b0001
+        static let GoTo         : UInt32 = 0b0010
     } // struct AIStates
     
     func update()
     {
+        if sprite.zRotation > CGFloat.pi*2
+        {
+            sprite.zRotation = sprite.zRotation.remainder(dividingBy: CGFloat.pi*2)
+        }
+        if sprite.zRotation < -CGFloat.pi*2
+        {
+            sprite.zRotation = -sprite.zRotation.remainder(dividingBy: CGFloat.pi*2)
+        }
 
         switch currentState
         {
         case AIStates.Wander:
             wander()
+            
+        case AIStates.GoTo:
+            goTo(pos: goToPoint)
             
         default:
             print("Error -- Unknown State")
@@ -47,13 +60,7 @@ class AntClass:EntityClass
         
         
         
-        
-        // if we're turning, update rotation
-        if isTurning
-        {
-            turning()
-        } // if the ant is currently turning
-        
+    
         // update movement based on heading and speed
         
         heading=sprite.zRotation
@@ -70,6 +77,38 @@ class AntClass:EntityClass
         
     } // func update
     
+    func goTo(pos: CGPoint)
+    {
+        let dx=pos.x-position.x
+        let dy=pos.y-position.y
+        var angle=atan2(dy, dx)
+        /*
+        if angle < 0
+        {
+            angle = angle + (CGFloat.pi*2)
+        }
+        */
+        
+        sprite.run(SKAction.rotate(toAngle: angle, duration: 0.3, shortestUnitArc: true))
+        //sprite.run(SKAction.rotate(toAngle: angle, duration: 0.3))
+        
+        print("Turn To Angle: \(angle)")
+        
+        let dist=sqrt((dy*dy)+(dx*dx))
+        if dist < 20
+        {
+            currentState=AIStates.Wander
+        }
+        
+        if speed < 0.5
+        {
+            speed=0.5
+        }
+        
+        
+    } // func goTo
+    
+    
     func wander()
     {
         let now=NSDate()
@@ -84,7 +123,7 @@ class AntClass:EntityClass
             turnTo(angle:da)
             
             lastWanderTurn=now
-            print("Heading \(heading)")
+            //print("Heading \(heading)")
         }
         
         // check to see if we need to speed up or slow down
@@ -114,12 +153,7 @@ class AntClass:EntityClass
         sprite.run(SKAction.rotate(toAngle: angle, duration: 0.3))
     } // func turnTo
     
-    func turning()
-    {
-  
-        
-        
-    } // func turning
+
     
     
     
