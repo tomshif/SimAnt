@@ -21,6 +21,8 @@ class AntClass:EntityClass
     var sprite=SKSpriteNode()
     var born=NSDate()
     var goToPoint=CGPoint(x: 0, y: 0)
+    var interceptTarget:EntityClass?
+    
     
     // Constants
     let maxSpeed:CGFloat=1.0
@@ -32,6 +34,8 @@ class AntClass:EntityClass
         static let None         : UInt32 = 0
         static let Wander       : UInt32 = 0b0001
         static let GoTo         : UInt32 = 0b0010
+        static let Intercept    : UInt32 = 0b0100
+        
     } // struct AIStates
     
     func update()
@@ -52,6 +56,16 @@ class AntClass:EntityClass
             
         case AIStates.GoTo:
             goTo(pos: goToPoint)
+            
+        case AIStates.Intercept:
+            if interceptTarget != nil
+            {
+                intercept()
+            }
+            else
+            {
+                currentState=AIStates.Wander
+            }
             
         default:
             print("Error -- Unknown State")
@@ -76,6 +90,30 @@ class AntClass:EntityClass
         lastUpdate=NSDate()
         
     } // func update
+    
+    func intercept()
+    {
+        let dx=interceptTarget!.position.x-position.x
+        let dy=interceptTarget!.position.y-position.y
+        var angle=atan2(dy, dx)
+
+        
+        sprite.run(SKAction.rotate(toAngle: angle, duration: 0.3, shortestUnitArc: true))
+
+        print("Turn To Angle: \(angle)")
+        
+        let dist=sqrt((dy*dy)+(dx*dx))
+        if dist < 20
+        {
+            currentState=AIStates.Wander
+        }
+        
+        speed=maxSpeed
+        
+        
+        
+    }
+    
     
     func goTo(pos: CGPoint)
     {
