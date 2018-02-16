@@ -14,7 +14,7 @@ class GameScene: SKScene {
 
     var myAnt=[AntClass]()
     let mound=SKShapeNode(circleOfRadius: 12)
-    let maxAnts=1
+    let maxAnts=30
     let circle=SKShapeNode(circleOfRadius: 20)
     override func didMove(to view: SKView) {
     
@@ -41,13 +41,16 @@ class GameScene: SKScene {
     
     
     func touchDown(atPoint pos : CGPoint) {
-        myAnt[0].currentState=AntClass.AIStates.GoTo
-        myAnt[0].goToPoint=pos
-        circle.isHidden=false
-        circle.fillColor=NSColor.yellow
-        circle.position=pos
-        
-        
+
+        let food=FoodClass()
+        food.position=pos
+        food.sprite.position=pos
+        addChild(food.sprite)
+        for i in 0...myAnt.count-1
+        {
+            myAnt[i].currentState = AntClass.AIStates.Intercept
+            myAnt[i].interceptTarget=food
+        }
         
     }
     
@@ -74,6 +77,10 @@ class GameScene: SKScene {
     override func keyDown(with event: NSEvent) {
         switch event.keyCode {
 
+        case 49:
+            myAnt[0].currentState=AntClass.AIStates.Intercept
+            myAnt[0].interceptTarget=myAnt[1]
+            
         default:
             print("keyDown: \(event.characters!) keyCode: \(event.keyCode)")
         } // switch key
