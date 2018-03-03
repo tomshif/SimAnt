@@ -35,6 +35,8 @@ class AntClass:EntityClass
         static let Wander       : UInt32 = 0b0001
         static let GoTo         : UInt32 = 0b0010
         static let Intercept    : UInt32 = 0b0100
+        static let GoToMound    : UInt32 = 0b1000
+        
         
     } // struct AIStates
     
@@ -67,6 +69,15 @@ class AntClass:EntityClass
                 currentState=AIStates.Wander
             }
             
+        case AIStates.GoToMound:
+            if interceptTarget != nil
+            {
+                intercept()
+            }
+            else
+            {
+                currentState=AIStates.Wander
+            }
         default:
             print("Error -- Unknown State")
             
@@ -103,16 +114,31 @@ class AntClass:EntityClass
         print("Turn To Angle: \(angle)")
         
         let dist=sqrt((dy*dy)+(dx*dx))
-        if dist < 20
+        
+        if dist < 20 && currentState==AIStates.GoToMound
         {
             currentState=AIStates.Wander
         }
+        
+        
+        if currentState==AIStates.Intercept && dist < 20
+        {
+            if let foodTest = interceptTarget as? FoodClass
+            {
+                currentState=AIStates.GoToMound
+                
+            }
+            
+        }
+        
+        
+
         
         speed=maxSpeed
         
         
         
-    }
+    } // func intercept
     
     
     func goTo(pos: CGPoint)
@@ -195,6 +221,24 @@ class AntClass:EntityClass
     override init()
     {
         super.init()
+        
+        health=10
+        
+        
+        
+        boundary=SKShapeNode(circleOfRadius: health)
+        
+        boundary.zPosition=0
+        boundary.fillColor=NSColor.clear
+        boundary.physicsBody = SKPhysicsBody(circleOfRadius: health)
+        boundary.physicsBody?.isDynamic = true
+        boundary.physicsBody?.categoryBitMask = physCat.Ant
+        boundary.physicsBody?.contactTestBitMask = physCat.Food
+        boundary.physicsBody?.collisionBitMask = physCat.None
+        boundary.physicsBody?.usesPreciseCollisionDetection = true
+        
+        
+        
         heading=random(min: 0, max: CGFloat.pi*2)
         sprite=SKSpriteNode(imageNamed: "ant")
         sprite.position=position

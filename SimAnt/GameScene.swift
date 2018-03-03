@@ -9,30 +9,41 @@
 import SpriteKit
 import GameplayKit
 
-class GameScene: SKScene {
+class GameScene: SKScene,SKPhysicsContactDelegate {
     
 
     var myAnt=[AntClass]()
-    let mound=SKShapeNode(circleOfRadius: 12)
     let maxAnts=30
     let circle=SKShapeNode(circleOfRadius: 20)
+    let mound=MoundClass()
+    
+    
+    
     override func didMove(to view: SKView) {
     
+        physicsWorld.gravity = CGVector.zero
+        physicsWorld.contactDelegate = self
+        
+        
+        backgroundColor=NSColor.brown
+        
         // draw ant mound
-        mound.fillColor=NSColor.brown
-        mound.zPosition=0
-        addChild(mound)
+        addChild(mound.sprite)
+        
+        
         
         circle.isHidden=true
         addChild(circle)
         
         
-        for i in 1...maxAnts
+        for i in 0...maxAnts-1
         {
             let tempAnt=AntClass()
             tempAnt.speed=0.5
             myAnt.append(tempAnt)
-            addChild(myAnt[i-1].sprite)
+            addChild(myAnt[i].sprite)
+            myAnt[i].sprite.addChild(myAnt[i].boundary)
+            myAnt[i].boundary.setScale(1/0.15)
             
         }
         
@@ -46,6 +57,9 @@ class GameScene: SKScene {
         food.position=pos
         food.sprite.position=pos
         addChild(food.sprite)
+        food.sprite.addChild(food.boundary)
+        food.boundary.setScale(1/0.1)
+        
         for i in 0...myAnt.count-1
         {
             myAnt[i].currentState = AntClass.AIStates.Intercept
@@ -102,22 +116,7 @@ class GameScene: SKScene {
         } // for each ant
     } // func checkAntBoundaries
     
-    func checkAntAtMound()
-    {
-        let now=NSDate()
-        
-        for i in 0...myAnt.count-1
-        {
-            let timeDelta=now.timeIntervalSince(myAnt[i].born as Date)
-            if timeDelta > 3.0 && mound.contains(myAnt[i].sprite.position)
-            {
-                myAnt[i].sprite.removeFromParent()
-                myAnt.remove(at: i)
-                break
-                
-            } // if the ant is at the mound
-        } // for each ant
-    } // func checkAntAtMound
+
     
     func checkAddAnt()
     {
@@ -130,6 +129,9 @@ class GameScene: SKScene {
                 tempAnt.speed=0.5
                 myAnt.append(tempAnt)
                 addChild((myAnt.last?.sprite)!)
+                myAnt[myAnt.count-1].sprite.addChild(myAnt[myAnt.count-1].boundary)
+                myAnt[myAnt.count-1].boundary.setScale(1/0.15)
+                
             }
             
         } // if we have less than the max # of ants
@@ -140,16 +142,18 @@ class GameScene: SKScene {
         // Called before each frame is rendered
         
         checkAntBoundaries()
-        checkAntAtMound()
         checkAddAnt()
         
         for i in 0...myAnt.count-1
         {
             myAnt[i].update()
-            if myAnt[0].currentState==AntClass.AIStates.Wander
+            if myAnt[i].currentState==AntClass.AIStates.GoToMound
             {
-                circle.isHidden=true
+                myAnt[i].interceptTarget=mound
             }
+            
+            
+
         }
     } // func update
 }

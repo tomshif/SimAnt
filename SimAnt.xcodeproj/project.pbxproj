@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		F45B452C202363D500CFC70A /* random.swift in Sources */ = {isa = PBXBuildFile; fileRef = F45B452B202363D500CFC70A /* random.swift */; };
 		F47C596A20372FF6001DE317 /* FoodClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = F47C596920372FF6001DE317 /* FoodClass.swift */; };
+		F47C5987203C7090001DE317 /* MoundClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = F47C5986203C7090001DE317 /* MoundClass.swift */; };
 		F4B0F46A202015980011D19F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4B0F469202015980011D19F /* AppDelegate.swift */; };
 		F4B0F46C202015980011D19F /* GameScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = F4B0F46B202015980011D19F /* GameScene.sks */; };
 		F4B0F46E202015980011D19F /* Actions.sks in Resources */ = {isa = PBXBuildFile; fileRef = F4B0F46D202015980011D19F /* Actions.sks */; };
@@ -42,6 +43,7 @@
 /* Begin PBXFileReference section */
 		F45B452B202363D500CFC70A /* random.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = random.swift; sourceTree = "<group>"; };
 		F47C596920372FF6001DE317 /* FoodClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoodClass.swift; sourceTree = "<group>"; };
+		F47C5986203C7090001DE317 /* MoundClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoundClass.swift; sourceTree = "<group>"; };
 		F4B0F466202015980011D19F /* SimAnt.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SimAnt.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F4B0F469202015980011D19F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		F4B0F46B202015980011D19F /* GameScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = GameScene.sks; sourceTree = "<group>"; };
@@ -123,6 +125,7 @@
 				F45B452B202363D500CFC70A /* random.swift */,
 				F4B0F49D20201A600011D19F /* AntClass.swift */,
 				F47C596920372FF6001DE317 /* FoodClass.swift */,
+				F47C5986203C7090001DE317 /* MoundClass.swift */,
 			);
 			path = SimAnt;
 			sourceTree = "<group>";
@@ -284,6 +287,7 @@
 				F47C596A20372FF6001DE317 /* FoodClass.swift in Sources */,
 				F4B0F472202015980011D19F /* ViewController.swift in Sources */,
 				F4B0F470202015980011D19F /* GameScene.swift in Sources */,
+				F47C5987203C7090001DE317 /* MoundClass.swift in Sources */,
 				F4B0F49E20201A600011D19F /* AntClass.swift in Sources */,
 				F4B0F46A202015980011D19F /* AppDelegate.swift in Sources */,
 				F4B0F49C202015FA0011D19F /* EntityClass.swift in Sources */,
