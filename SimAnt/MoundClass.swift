@@ -18,6 +18,7 @@ class MoundClass:EntityClass
         super.init()
         sprite=SKSpriteNode(imageNamed: "antMound")
         sprite.setScale(0.03)
+        sprite.zPosition=0
         
     }
     

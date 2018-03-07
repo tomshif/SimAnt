@@ -111,13 +111,14 @@ class AntClass:EntityClass
         
         sprite.run(SKAction.rotate(toAngle: angle, duration: 0.3, shortestUnitArc: true))
 
-        print("Turn To Angle: \(angle)")
+        //print("Turn To Angle: \(angle)")
         
         let dist=sqrt((dy*dy)+(dx*dx))
         
         if dist < 20 && currentState==AIStates.GoToMound
         {
             currentState=AIStates.Wander
+            
         }
         
         
@@ -126,10 +127,14 @@ class AntClass:EntityClass
             if let foodTest = interceptTarget as? FoodClass
             {
                 currentState=AIStates.GoToMound
+                if interceptTarget != nil
+                {
+                    interceptTarget?.health -= 10
+                } // if interceptTarget
                 
-            }
+            } // if target is food
             
-        }
+        } // if we're in range of our target
         
         
 
@@ -230,6 +235,8 @@ class AntClass:EntityClass
         
         boundary.zPosition=0
         boundary.fillColor=NSColor.clear
+        boundary.isHidden=true
+        
         boundary.physicsBody = SKPhysicsBody(circleOfRadius: health)
         boundary.physicsBody?.isDynamic = true
         boundary.physicsBody?.categoryBitMask = physCat.Ant
@@ -244,6 +251,9 @@ class AntClass:EntityClass
         sprite.position=position
         sprite.zRotation=heading
         sprite.setScale(0.15)
+        sprite.zPosition=5
+        boundary.name=name
+        
         currentState=AIStates.Wander
         
     } //

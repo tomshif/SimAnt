@@ -13,7 +13,10 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
     
 
     var myAnt=[AntClass]()
-    let maxAnts=30
+    var foodList=[FoodClass]()
+    
+    
+    let maxAnts=250
     let circle=SKShapeNode(circleOfRadius: 20)
     let mound=MoundClass()
     
@@ -25,7 +28,7 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
         physicsWorld.contactDelegate = self
         
         
-        backgroundColor=NSColor.brown
+        backgroundColor=NSColor.black
         
         // draw ant mound
         addChild(mound.sprite)
@@ -51,20 +54,80 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
     } // func didMove
     
     
+    func didBegin(_ contact: SKPhysicsContact) {
+        
+        
+        var firstBody: SKPhysicsBody
+        var secondBody: SKPhysicsBody
+        if contact.bodyA.categoryBitMask < contact.bodyB.categoryBitMask {
+            firstBody = contact.bodyA
+            secondBody = contact.bodyB
+        } else
+        {
+            firstBody = contact.bodyB
+            secondBody = contact.bodyA
+        }
+        
+        if ((firstBody.categoryBitMask & physCat.Ant != 0) &&
+            (secondBody.categoryBitMask & physCat.Food != 0))
+        {
+            if let tempAnt = firstBody.node as? SKShapeNode, let
+                tempFood = secondBody.node as? SKShapeNode
+            {
+            
+                // find the matching ant
+                var thisAnt:Int = -1
+                
+                for i in 0...myAnt.count-1
+                {
+                    if myAnt[i].name == tempAnt.name
+                    {
+                        thisAnt=i
+                        break
+                        
+                    } // if the things match
+                } // for each ant
+                
+                var thisFood:Int = -1
+                for i in 0...foodList.count-1
+                {
+                    if foodList[i].name == tempFood.name
+                    {
+                        thisFood=i
+                    } // if matches
+                } // for each food
+                
+                
+                if thisAnt > -1 && myAnt[thisAnt].currentState == AntClass.AIStates.Wander
+                {
+                    print("Ant \(thisAnt) found food \(thisFood).")
+                    myAnt[thisAnt].interceptTarget=foodList[thisFood]
+                    myAnt[thisAnt].currentState=AntClass.AIStates.Intercept
+                }
+                
+                
+                
+            } // if let
+            
+            
+        } // if ((firstBody...)
+        
+    } // func didBegin()
+    
     func touchDown(atPoint pos : CGPoint) {
 
         let food=FoodClass()
         food.position=pos
         food.sprite.position=pos
-        addChild(food.sprite)
-        food.sprite.addChild(food.boundary)
-        food.boundary.setScale(1/0.1)
+        foodList.append(food)
         
-        for i in 0...myAnt.count-1
-        {
-            myAnt[i].currentState = AntClass.AIStates.Intercept
-            myAnt[i].interceptTarget=food
-        }
+        let last=foodList.count-1
+        
+        
+        addChild(foodList[last].sprite)
+        foodList[last].sprite.addChild(foodList[last].boundary)
+        foodList[last].boundary.setScale(1/0.1)
+        
         
     }
     
@@ -143,6 +206,21 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
         
         checkAntBoundaries()
         checkAddAnt()
+        
+        if foodList.count > 0
+        {
+            for i in 0...foodList.count-1
+            {
+                if foodList[i].health < 0
+                {
+                    foodList[i].boundary.removeFromParent()
+                    foodList[i].sprite.removeFromParent()
+                    foodList.remove(at: i)
+                    break
+                }
+            
+            } // for each food
+        } // if we have food
         
         for i in 0...myAnt.count-1
         {
